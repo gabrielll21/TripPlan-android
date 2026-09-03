@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planeje sua viagem"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Configure sua viagem"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destino"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp" />
+
+        <EditText
+            android:id="@+id/edtDestino"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ex: Rio de Janeiro"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data de partida"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp" />
+
+        <Button
+            android:id="@+id/btnDataPartida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecionar data de partida" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data de retorno"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnDataRetorno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecionar data de retorno" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preferências"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp" />
+
+        <CheckBox
+            android:id="@+id/chkAventura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aventura" />
+
+        <CheckBox
+            android:id="@+id/chkCultura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cultura" />
+
+        <CheckBox
+            android:id="@+id/chkPraia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Praia" />
+
+        <Button
+            android:id="@+id/btnContinuar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continuar"
+            android:layout_marginTop="32dp" />
+
+    </LinearLayout>
+
+</ScrollView>
