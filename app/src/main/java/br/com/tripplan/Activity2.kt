@@ -3,6 +3,8 @@ package br.com.tripplan
 import android.app.Activity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class Activity2 : Activity() {
 
@@ -32,6 +34,17 @@ class Activity2 : Activity() {
         criarAtividades()
 
         val atividadesFiltradas = filtrarAtividades(preferencias)
+
+        val recyclerAtividades = findViewById<RecyclerView>(R.id.recyclerAtividades)
+        recyclerAtividades.layoutManager = LinearLayoutManager(this)
+        recyclerAtividades.adapter = AtividadeAdapter(atividadesFiltradas) { atividade ->
+            println("=== ATIVIDADE SELECIONADA ===")
+            println("Nome: ${atividade.nome}")
+            println("Descrição: ${atividade.descricao}")
+            println("Categoria: ${atividade.categoria}")
+            println("Duração: ${atividade.duracao}")
+            println("Dificuldade: ${atividade.dificuldade}")
+        }
 
         println("=== ATIVIDADES DISPONÍVEIS ===")
 
