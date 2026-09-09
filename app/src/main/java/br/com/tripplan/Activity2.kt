@@ -47,6 +47,10 @@ class Activity2 : Activity() {
             println("Dificuldade: ${atividade.dificuldade}")
 
             val intent = Intent(this, Activity3::class.java)
+            intent.putExtra("destino", destino)
+            intent.putExtra("dataPartida", dataPartida)
+            intent.putExtra("dataRetorno", dataRetorno)
+            intent.putExtra("preferencias", preferencias)
             intent.putExtra("nome", atividade.nome)
             intent.putExtra("descricao", atividade.descricao)
             intent.putExtra("categoria", atividade.categoria)
