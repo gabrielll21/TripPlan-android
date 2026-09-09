@@ -1,6 +1,7 @@
 package br.com.tripplan
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
@@ -15,6 +16,10 @@ class Activity3 : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_activity3)
 
+        val destino = intent.getStringExtra("destino") ?: ""
+        val dataPartida = intent.getStringExtra("dataPartida") ?: ""
+        val dataRetorno = intent.getStringExtra("dataRetorno") ?: ""
+        val preferencias = intent.getStringExtra("preferencias") ?: ""
         val nome = intent.getStringExtra("nome") ?: ""
         val descricao = intent.getStringExtra("descricao") ?: ""
         val categoria = intent.getStringExtra("categoria") ?: ""
@@ -71,13 +76,33 @@ class Activity3 : Activity() {
                 ?.let { findViewById<RadioButton>(it).text.toString() }
                 ?: dificuldade
 
-            println("=== ATIVIDADE CONFIRMADA ===")
+            val unidadeDuracao = if (seekDuracao.progress == 1) "hora" else "horas"
+            val duracaoSelecionada = "${seekDuracao.progress} $unidadeDuracao"
+
+            println("=== TRANSIÇÃO PARA ACTIVITY 4 ===")
+            println("Destino: $destino")
+            println("Data de partida: $dataPartida")
+            println("Data de retorno: $dataRetorno")
+            println("Preferências: $preferencias")
             println("Nome: $nome")
             println("Descrição: $descricao")
             println("Categoria: $categoria")
-            println("Duração: ${seekDuracao.progress} hora(s)")
+            println("Duração: $duracaoSelecionada")
             println("Dificuldade: $dificuldadeSelecionada")
             println("Imagem: $imagem")
+
+            val intent = Intent(this, Activity4::class.java)
+            intent.putExtra("destino", destino)
+            intent.putExtra("dataPartida", dataPartida)
+            intent.putExtra("dataRetorno", dataRetorno)
+            intent.putExtra("preferencias", preferencias)
+            intent.putExtra("nome", nome)
+            intent.putExtra("descricao", descricao)
+            intent.putExtra("categoria", categoria)
+            intent.putExtra("duracao", duracaoSelecionada)
+            intent.putExtra("dificuldade", dificuldadeSelecionada)
+            intent.putExtra("imagem", imagem)
+            startActivity(intent)
         }
     }
 
