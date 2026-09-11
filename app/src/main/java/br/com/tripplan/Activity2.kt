@@ -96,7 +96,8 @@ class Activity2 : Activity() {
         val campos = listOf(
             Place.Field.DISPLAY_NAME,
             Place.Field.FORMATTED_ADDRESS,
-            Place.Field.PRIMARY_TYPE_DISPLAY_NAME
+            Place.Field.PRIMARY_TYPE_DISPLAY_NAME,
+            Place.Field.PHOTO_METADATAS
         )
         val request = SearchByTextRequest.builder("pontos turísticos em $destino", campos)
             .setMaxResultCount(10)
@@ -106,13 +107,25 @@ class Activity2 : Activity() {
             .addOnSuccessListener { response ->
                 val atividadesPlaces = response.places.mapNotNull { place ->
                     place.displayName?.let { nome ->
+                        val fotoMetadata = place.photoMetadatas?.firstOrNull()
+                        val autores = fotoMetadata?.authorAttributions
+                            ?.asList()
+                            ?.joinToString(", ") { it.name }
+                            .orEmpty()
+                        val atribuicaoFoto = listOfNotNull(
+                            fotoMetadata?.attributions?.takeIf { it.isNotBlank() },
+                            autores.takeIf { it.isNotBlank() }?.let { "Foto: $it" }
+                        ).joinToString(" • ")
+
                         Atividade(
                             nome = nome,
                             descricao = place.formattedAddress ?: "Endereço não informado",
                             categoria = place.primaryTypeDisplayName ?: "Local",
                             duracao = "2 horas",
                             dificuldade = "Fácil",
-                            imagem = R.drawable.ic_launcher_foreground
+                            imagem = R.drawable.ic_launcher_foreground,
+                            fotoMetadata = fotoMetadata,
+                            atribuicaoFoto = atribuicaoFoto
                         )
                     }
                 }
@@ -125,7 +138,8 @@ class Activity2 : Activity() {
                 txtTitulo.text = "Lugares em $destino"
                 recyclerAtividades.adapter = AtividadeAdapter(
                     atividadesPlaces,
-                    onSelecionarAtividade
+                    onSelecionarAtividade,
+                    placesClient
                 )
                 Log.d("Activity2", "Busca concluída: ${atividadesPlaces.size} lugares")
             }

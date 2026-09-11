@@ -52,6 +52,14 @@
             android:layout_marginTop="4dp"
             android:text="Duração e dificuldade" />
 
+        <TextView
+            android:id="@+id/txtAtribuicaoFoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btnSelecionarAtividade"
             android:layout_width="match_parent"
