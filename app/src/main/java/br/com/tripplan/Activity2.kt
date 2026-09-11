@@ -3,9 +3,12 @@ package br.com.tripplan
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.SearchByTextRequest
 
 class Activity2 : Activity() {
 
@@ -22,6 +25,7 @@ class Activity2 : Activity() {
 
         val txtDestino = findViewById<TextView>(R.id.txtDestino)
         val txtPreferencias = findViewById<TextView>(R.id.txtPreferencias)
+        val txtTitulo = findViewById<TextView>(R.id.txtTitulo)
 
         txtDestino.text = "Destino: $destino"
         txtPreferencias.text = "Preferências: $preferencias"
@@ -38,7 +42,7 @@ class Activity2 : Activity() {
 
         val recyclerAtividades = findViewById<RecyclerView>(R.id.recyclerAtividades)
         recyclerAtividades.layoutManager = LinearLayoutManager(this)
-        recyclerAtividades.adapter = AtividadeAdapter(atividadesFiltradas) { atividade ->
+        val onSelecionarAtividade: (Atividade) -> Unit = { atividade ->
             println("=== TRANSIÇÃO PARA A ACTIVITY 3 ===")
             println("Nome: ${atividade.nome}")
             println("Descrição: ${atividade.descricao}")
@@ -59,12 +63,76 @@ class Activity2 : Activity() {
             intent.putExtra("imagem", atividade.imagem)
             startActivity(intent)
         }
+        recyclerAtividades.adapter = AtividadeAdapter(
+            atividadesFiltradas,
+            onSelecionarAtividade
+        )
 
         println("=== ATIVIDADES DISPONÍVEIS ===")
 
         for (atividade in atividadesFiltradas) {
             println("${atividade.nome} - ${atividade.categoria}")
         }
+
+        buscarLugares(destino, txtTitulo, recyclerAtividades, onSelecionarAtividade)
+    }
+
+    private fun buscarLugares(
+        destino: String,
+        txtTitulo: TextView,
+        recyclerAtividades: RecyclerView,
+        onSelecionarAtividade: (Atividade) -> Unit
+    ) {
+        val placesClient = (application as TripPlanApplication).placesClient
+
+        if (destino.isBlank() || placesClient == null) {
+            txtTitulo.text = "Não foi possível buscar lugares"
+            Log.e("Activity2", "Não foi possível iniciar a busca de lugares")
+            return
+        }
+
+        txtTitulo.text = "Buscando lugares..."
+
+        val campos = listOf(
+            Place.Field.DISPLAY_NAME,
+            Place.Field.FORMATTED_ADDRESS,
+            Place.Field.PRIMARY_TYPE_DISPLAY_NAME
+        )
+        val request = SearchByTextRequest.builder("pontos turísticos em $destino", campos)
+            .setMaxResultCount(10)
+            .build()
+
+        placesClient.searchByText(request)
+            .addOnSuccessListener { response ->
+                val atividadesPlaces = response.places.mapNotNull { place ->
+                    place.displayName?.let { nome ->
+                        Atividade(
+                            nome = nome,
+                            descricao = place.formattedAddress ?: "Endereço não informado",
+                            categoria = place.primaryTypeDisplayName ?: "Local",
+                            duracao = "2 horas",
+                            dificuldade = "Fácil",
+                            imagem = R.drawable.ic_launcher_foreground
+                        )
+                    }
+                }
+
+                if (atividadesPlaces.isEmpty()) {
+                    txtTitulo.text = "Nenhum lugar encontrado. Exibindo sugestões locais."
+                    return@addOnSuccessListener
+                }
+
+                txtTitulo.text = "Lugares em $destino"
+                recyclerAtividades.adapter = AtividadeAdapter(
+                    atividadesPlaces,
+                    onSelecionarAtividade
+                )
+                Log.d("Activity2", "Busca concluída: ${atividadesPlaces.size} lugares")
+            }
+            .addOnFailureListener { error ->
+                txtTitulo.text = "Erro na busca. Exibindo sugestões locais."
+                Log.e("Activity2", "Erro ao buscar lugares", error)
+            }
     }
 
     private fun criarAtividades() {
